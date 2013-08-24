@@ -64,8 +64,8 @@ int main (void)
 
 //	result = _pi((float) 2000000);
 //	printf("The number of primes less than or equal to 2000000 is less than %i \n", result);
-	bigResult = sumOfPrimes(2000000);
-	printf ( "The sum of all primes less than 2 million = %lli \n", bigResult);
+	//bigResult = sumOfPrimes(2000000);
+	//printf ( "The sum of all primes less than 2 million = %lli \n", bigResult);
 
 	// isdigitTest(100);
 	// gcdTest();

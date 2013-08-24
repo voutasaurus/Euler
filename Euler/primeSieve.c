@@ -13,6 +13,7 @@ long long int primeSieve(int n) // Returns the nth prime
 	// Initialise first prime
 	long long int m = 2;
 	int i = 0;
+	int j;
 
 	primes[i] = m;
 	i++;
@@ -22,7 +23,7 @@ long long int primeSieve(int n) // Returns the nth prime
 		m++;
 		prime = true;
 
-		for (int j = 0; j < i; j++)
+		for (j = 0; j < i; j++)
 		{
 //			printf("Prime number %i is %lli \n", j, primes[j]);
 			if (m % primes[j] == 0)
@@ -70,6 +71,7 @@ long long int sumOfPrimes(int limit)
 	// Initialise first prime
 	int m = 2;
 	int i = 0; // = 0;
+	int j;
 
 	sumPrimes = 2;
 	primes[i] = m;
@@ -80,7 +82,7 @@ long long int sumOfPrimes(int limit)
 		m++;
 		prime = true;
 
-		for (int j = 0; j < i; j++)
+		for (j = 0; j < i; j++)
 		{
 //			printf("Prime number %i is %lli \n", j, primes[j]);
 			if (m % primes[j] == 0)

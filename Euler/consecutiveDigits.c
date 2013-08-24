@@ -8,6 +8,7 @@ void isdigitTest (int length)
 {
 
 	int a;
+	int i;
 
 	/* Set the maximum random integer required */
 	 int max = 80; 
@@ -16,7 +17,7 @@ void isdigitTest (int length)
 	 /* Seed for random values set using the OS time, time() needs argument */
 	 srand(time(NULL)); 
 
-	for (int i = 1; i <= length; i++)
+	for (i = 1; i <= length; i++)
 	{
 		a = rand() % max;
 		if (isdigit(a))
@@ -56,7 +57,8 @@ struct tempFive updateTemp (struct tempFive store, int newDigit)
 int productTemp (struct tempFive store)
 {
 	int product = 1;
-	for (int i = 0; i < 5; i++)
+	int i;
+	for (i = 0; i < 5; i++)
 	{
 		product *= store.temp[i] - '0';
 	} 
@@ -68,7 +70,8 @@ int productTemp (struct tempFive store)
 int greatestProductConsecutiveDigits(char *digitString)
 {
 	struct tempFive tempStore;
-	for (int i = 0; i < 5; i++)
+	int i;
+	for (i = 0; i < 5; i++)
 		tempStore.temp[i] = '0';
 	tempStore.next = 0;
 

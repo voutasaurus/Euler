@@ -86,8 +86,8 @@ int sumSquareDifference(int max)
 {
 	int sum = 0;
 	int squareSum = 0;
-
-	for (int i = 1; i <= max; i++)
+	int i;
+	for (i = 1; i <= max; i++)
 	{
 		sum += i;
 		squareSum += i*i;

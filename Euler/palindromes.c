@@ -41,6 +41,8 @@ int largestPalindromicProduct (void)
 
 	int largestPalindrome = 10000;
 
+	int loff;
+	int roff;
 
 	// int debugProduct;
 
@@ -57,9 +59,9 @@ int largestPalindromicProduct (void)
 				largeRight = right;	
 				// printf("debug... left: %i, right: %i, palindrome: %i \n", largeLeft, largeRight, largestPalindrome);
 
-				for (int loff = 1; loff <= 998-largeRight; loff++)
+				for (loff = 1; loff <= 998-largeRight; loff++)
 				{
-					for (int roff = 0; roff <= 999-largeRight-loff; roff++)
+					for (roff = 0; roff <= 999-largeRight-loff; roff++)
 					{
 						left = largeLeft - loff;
 						right = 999 - roff;

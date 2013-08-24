@@ -23,8 +23,8 @@ long long int lcm(long long int m, long long int n)
 long long int smallestCommonMultiple(int max)
 {
 	long long int multiple = 1;
-
-	for (long long int i = 2; i<= max; i++)
+	long long int i;
+	for (i = 2; i<= max; i++)
 	{
 		if ( multiple % i != 0) 
 			multiple = (multiple*i) / gcd(multiple, i);

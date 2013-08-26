@@ -132,18 +132,18 @@ void testLL (void)
 	printf("BREAK \n");
 
 	// Add Data
-	listptr = consLL(listptr, 1);
-	listptr = consLL(listptr, 2);
+	listptra = consLL(listptr, 1);
+	listptrb = consLL(listptra, 2);
 //	for (i = 0; i <= 10; i++)
 //		listptr = consLL(listptr, 10 - i);
 
 	// Print
 	printf("listptr: ");
 	printLL(listptr);
-//	printf("\n listptr: ");
-//	printLL(listptra);
-//	printf("\n listptrb: ");
-//	printLL(listptrb);
+	printf("\n listptr: ");
+	printLL(listptra);
+	printf("\n listptrb: ");
+	printLL(listptrb);
 
 	printf("BREAK \n");
 
@@ -158,6 +158,12 @@ void testLL (void)
 	n3.next = (struct linkedListEntry *) 0; // end of the list - null pointer
 
 	printLL(list_pointer);
+
+	// null test
+	struct linkedListEntry *list_pointer_thing = (struct linkedListEntry *) 0;
+
+	printf("list_pointer_thing: ");
+	printLL(list_pointer_thing);
 
 	// Add More Data
 //	for (i = 0; i <= 10; i++)

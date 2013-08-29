@@ -8,11 +8,11 @@
 
 // Constructors
 struct linkedListEntry 	*newLL(void);
-struct linkedListEntry 	*newLLwithvalue(int value); // Not implemented (needs storage allocated for entry)
+struct linkedListEntry 	*newLLwithvalue(int val); // Not implemented (needs storage allocated for entry)
 
 // Add entries
-struct linkedListEntry 	*consLL (struct linkedListEntry *front, struct linkedListEntry *newEntry, int valueToInsert);
-struct linkedListEntry 	*insertLL (struct linkedListEntry *front, struct linkedListEntry *newEntry, int valueToInsert);
+struct linkedListEntry 	*consLL (struct linkedListEntry *front, int valueToInsert);
+struct linkedListEntry 	*insertLL (struct linkedListEntry *front, int valueToInsert);
 
 // List deconstuctors
 int 			headLL(struct linkedListEntry *front); // Error case not handled appropriately
@@ -28,6 +28,8 @@ struct linkedListEntry 	*removeByRefLL(struct linkedListEntry *front, struct lin
 // Print list contents
 void 			printLL (struct linkedListEntry *front);
 
+// Test functions
+void 			testLL (void);
 
 // Data Structure for Linked List
 struct linkedListEntry
@@ -48,55 +50,35 @@ struct linkedListEntry *newLL (void)
 }
 
 // Function to make a new linked list given a single value
-// The user should do
-/* 
-	struct linkedListEntry *listptr;
-	struct linkedListEntry firstEntrySpace;
-	struct linkedListEntry *newEntry = &firstEntrySpace;
-	listptr = newLL();
-	listptr = &(consLL(listptr, newEntry, value));
-
-// Packaging this as a function is difficult because the memory has to be allocated at the level it is being used
-// The list pointer and the new entry pointer both have to be passed, and by that time
-// you may as well do it the other way
-// Repeat - Memory allocated within a function is fair game for the rest of the system when the function returns
-struct linkedListEntry *newLLwithvalue (struct linkedListEntry *space_ptr, int val)
+struct linkedListEntry *newLLwithvalue (int val)
 {
-	space_ptr = newLL();
-	space_ptr = consLL(space_ptr, , val);
+	struct linkedListEntry *newList = (struct linkedListEntry *) malloc (sizeof (struct linkedListEntry));
 
-	return listptr;
+	newList->value = val;
+	newList->next = (struct linkedListEntry *) 0;
+
+	return newList;
 }
-*/
+
 
 // Function to add a value to the front of a list 
-struct linkedListEntry *consLL (struct linkedListEntry *front, struct linkedListEntry *newEntry, int valueToInsert)
+struct linkedListEntry *consLL (struct linkedListEntry *front, int valueToInsert)
 {
+	// Allocate memory for this entry on the heap
+	struct linkedListEntry *newEntry = (struct linkedListEntry *) malloc(sizeof (struct linkedListEntry));
+
 	newEntry->value = valueToInsert; // The value of the entry from input
 	newEntry->next = front; // This new entry points to the old front of the list
 
 	return newEntry; // Return the new front of the list
 }
 
-int headLL (struct linkedListEntry *front)
-{
-	if (front != (struct linkedListEntry *) 0)
-		return front->value;
-	else
-		return -1; // ERROR - TODO: Add some appropriate error handling
-}
-
-struct linkedListEntry *tailLL (struct linkedListEntry *front)
-{
-	if (front != (struct linkedListEntry *) 0)
-		return front->next;
-	else
-		return front; // ERROR - TODO: Add some appropriate error handling?
-}
-
 // Function to insert a value into a sorted linked list
-struct linkedListEntry *insertLL (struct linkedListEntry *front, struct linkedListEntry *newEntry, int valueToInsert)
+struct linkedListEntry *insertLL (struct linkedListEntry *front, int valueToInsert)
 {
+	// Allocate memory for this entry on the heap
+	struct linkedListEntry *newEntry = (struct linkedListEntry *) malloc(sizeof (struct linkedListEntry));
+
 	newEntry->value = valueToInsert; // The value of that entry from input
 
 	struct linkedListEntry *current = front; // To cycle through the list
@@ -141,16 +123,22 @@ struct linkedListEntry *insertLL (struct linkedListEntry *front, struct linkedLi
 
 }
 
-// Function to print the contents of a list
-void printLL (struct linkedListEntry *front)
+// Get the head of the list (value of the first entry)
+int headLL (struct linkedListEntry *front)
 {
-	struct linkedListEntry *current = front;
+	if (front != (struct linkedListEntry *) 0)
+		return front->value;
+	else
+		return -1; // ERROR - TODO: Add some appropriate error handling
+}
 
-	while (current != (struct linkedListEntry *) 0)
-	{
-		printf("%i \n", current->value);
-		current = current->next;
-	}
+// Get the tail of the list (all but the first entry)
+struct linkedListEntry *tailLL (struct linkedListEntry *front)
+{
+	if (front != (struct linkedListEntry *) 0)
+		return front->next;
+	else
+		return front; // ERROR - TODO: Add some appropriate error handling?
 }
 
 struct linkedListEntry *removeFirstByValLL(struct linkedListEntry *front, int valueToRemove)
@@ -191,26 +179,34 @@ struct linkedListEntry *removeAllByValLL(struct linkedListEntry *front, int valu
 {
 	struct linkedListEntry *current = front; // To run through the list
 	struct linkedListEntry *previous = (struct linkedListEntry *) 0; // Keeps track of the previous entry
-
-	// bool found = false; // Flag for early termination - not needed for this version
+	struct linkedListEntry *remove = (struct linkedListEntry *) 0;
 
 	// Runs through the list
 	while (current != (struct linkedListEntry *) 0) // && !found) // Extra condition to terminate loop early
 	{
 		if (current->value == valueToRemove)
 		{
+			// REMOVE the current entry
+
 			// If there is a previous entry (ie current is not the front of the list)
 			if (previous != (struct linkedListEntry *) 0)
+			{
 				previous->next = current->next; // Point previous to next cutting out current
-			else
-				front = front->next; // Remove the front of the list
+				remove = current;
+				free(remove);		// Free the memory of the current entry
+			}
+			else // This is the front of the list
+			{
+				remove = front;
+				free(remove);		// Free the memory of the current entry
+				front = front->next; 	// Remove the front of the list
+			}
 
-			// The current entry is now removed from the list, athough the data will still remain in allocated memory
+			// The current entry is now removed from the list and memory has been freed
 
 			// Continue to next entry (previous stays the same as the entry it would normally be has been removed)
 			current = current->next;
 
-			// found = true; // This will cause the loop to terminate - we don't want this
 		}
 		else
 		{
@@ -228,12 +224,19 @@ struct linkedListEntry *removeAllByValLL(struct linkedListEntry *front, int valu
 struct linkedListEntry *removeByRefLL(struct linkedListEntry *front, struct linkedListEntry *entryToRemove)
 {
 	struct linkedListEntry *current = front; // To run through the list
+	struct linkedListEntry *remove = (struct linkedListEntry *) 0; // To run through the list
 
 	if (entryToRemove == (struct linkedListEntry *) 0)
 		return front; // Void reference cannot be removed
 
 	if (front == entryToRemove)
-		return front->next; // Just remove the front of the list
+	{
+		current = front->next;
+		remove = front;
+		free(remove);	
+
+		return current; // Just remove the front of the list
+	}
 
 	bool found = false;
 
@@ -243,6 +246,7 @@ struct linkedListEntry *removeByRefLL(struct linkedListEntry *front, struct link
 		{
 			current->next = entryToRemove->next;
 			found = true;
+			free(entryToRemove);
 		}
 		else
 		{
@@ -254,6 +258,17 @@ struct linkedListEntry *removeByRefLL(struct linkedListEntry *front, struct link
 
 }
 
+// Function to print the contents of a list
+void printLL (struct linkedListEntry *front)
+{
+	struct linkedListEntry *current = front;
+
+	while (current != (struct linkedListEntry *) 0)
+	{
+		printf("%i \n", current->value);
+		current = current->next;
+	}
+}
 
 // Function for testing insertion sort
 // Just shuffles the digits 1-9 in a predetermined way
@@ -359,12 +374,7 @@ void testLL (void)
 	struct linkedListEntry *list_pointer_consLL = newLL();
 	
 	// Add to new list
-	// Must allocate space for the new entry at the level that the list is being used
-	// Otherwise the memory will be collected and everything will be stuffed
-	struct linkedListEntry newEntrySpace; 
-	struct linkedListEntry *newEntry = &newEntrySpace;
-
-	list_pointer_consLL = consLL(list_pointer_consLL, newEntry, 2);
+	list_pointer_consLL = consLL(list_pointer_consLL, 2);
 
 	printf("Cons list print (consLL): \n");
 	printf("==================== \n");
@@ -377,18 +387,11 @@ void testLL (void)
 	printLL(list_pointer_consLL);
 	printf("==================== \n");
 
+	// Fresh list for new test
 	struct linkedListEntry *list_pointer_consLL_mult = newLL();
 
-	struct linkedListEntry newEntrySpaces[10]; 
-	struct linkedListEntry *newEntrySpot = &(newEntrySpaces[0]);
-
-	list_pointer_consLL_mult = consLL(list_pointer_consLL_mult, newEntrySpot, 0);
-	
-	for (i = 1; i < 10; i++)
-	{
-		newEntrySpot = &(newEntrySpaces[i]);
-		list_pointer_consLL_mult = consLL(list_pointer_consLL_mult, newEntrySpot, i);
-	}
+	for (i = 0; i < 10; i++)
+		list_pointer_consLL_mult = consLL(list_pointer_consLL_mult, i);
 
 	printf("Cons mult list print (consLL): \n");
 	printf("==================== \n");
@@ -414,16 +417,12 @@ void testLL (void)
 	// Test 4: insertLL
 
 	struct linkedListEntry *list_pointer_insertLL = newLL();
-
-	struct linkedListEntry newEntryAllocation[10]; 
-	struct linkedListEntry *newEntryAlloc = &(newEntryAllocation[0]);
-
-	list_pointer_insertLL = insertLL(list_pointer_insertLL, newEntryAlloc, 5);
+	list_pointer_insertLL = insertLL(list_pointer_insertLL, 5);
 
 	for (i = 1; i < 10; i++)
 	{
-		newEntryAlloc = &(newEntryAllocation[i]);
-		list_pointer_insertLL = insertLL(list_pointer_insertLL, newEntryAlloc, mix(i));
+		//newEntryAlloc = &(newEntryAllocation[i]);
+		list_pointer_insertLL = insertLL(list_pointer_insertLL, mix(i));
 	}
 
 	printf("Insertion list print (insertLL): \n");
@@ -501,9 +500,9 @@ void testLL (void)
 	// Test 6b: Remove Data (removeAllByVal) - using insert list
 
 	struct linkedListEntry anotherNewEntry;
-	newEntry = &anotherNewEntry;
+	struct linkedListEntry *newEntry = &anotherNewEntry;
 
-	list_pointer_insertLL = insertLL(list_pointer_insertLL, newEntry, 2);
+	list_pointer_insertLL = insertLL(list_pointer_insertLL, 2);
 	list_pointer_insertLL = removeAllByValLL(list_pointer_insertLL, 2);
 
 	printf("Remove list print (removeAllByValLL): \n");
@@ -530,7 +529,7 @@ void testLL (void)
 
 	struct linkedListEntry *toRemoveByRef = list_pointer_insertLL;
 
-	toRemoveByRef = toRemoveByRef->next->next->next->next->next->next->next->next;
+	toRemoveByRef = toRemoveByRef->next->next->next->next->next->next->next;
 
 	list_pointer_insertLL = removeByRefLL(list_pointer_insertLL, toRemoveByRef);
 
@@ -547,7 +546,7 @@ void testLL (void)
 	printf("6 \n");
 	printf("7 \n");
 	printf("8 \n");
-	printf("9 \n");
+//	printf("9 \n");
 	printf("==================== \n");
 	printf("Actual: \n");
 	printf("==================== \n");

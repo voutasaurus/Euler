@@ -16,6 +16,9 @@ int main (void)
 	// Linked List
 	testLL();
 
+	// Doubly Linked List
+	testDLL();
+
 	// Binary Tree
 	// Binary Search Tree
 	// Queue

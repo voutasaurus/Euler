@@ -315,6 +315,13 @@ int mix(int i)
 // Function to test Linked Lists
 void testLL (void)
 {
+
+	printf("\n");
+	printf("======================================== \n");	
+	printf("Linked List Test function running \n");
+	printf("======================================== \n");
+	printf("\n");
+
 	int i = 0;
 
 	// Test 1: manual list construction
@@ -552,6 +559,12 @@ void testLL (void)
 	printf("==================== \n");
 	printLL(list_pointer_insertLL);
 	printf("==================== \n");
+
+	printf("\n");
+	printf("================================== \n");	
+	printf("Linked List Test function complete \n");
+	printf("================================== \n");
+	printf("\n");
 
 
 }
